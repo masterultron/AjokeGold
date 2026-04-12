@@ -34,6 +34,9 @@ function App() {
               <main className="flex-1">
                 <Router />
               </main>
+              <footer className="border-t border-white/10 py-6 text-center">
+                <p className="text-white/40 text-xs tracking-widest uppercase">&copy; {new Date().getFullYear()} TheAbdurrahaman. All rights reserved.</p>
+              </footer>
             </div>
           </WouterRouter>
           <Toaster />
