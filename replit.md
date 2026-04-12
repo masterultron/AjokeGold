@@ -16,6 +16,30 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - **API codegen**: Orval (from OpenAPI spec)
 - **Build**: esbuild (CJS bundle)
 
+## Artifacts
+
+### Ajoke Gold (Frontend E-Commerce)
+- **Path**: `artifacts/ajoke-gold/`
+- **Type**: React + Vite (frontend-only, no backend)
+- **Preview**: `/` (root)
+- **Purpose**: Luxury e-commerce storefront for UAE-based jewelry brand "Ajoke Gold"
+- **Design**: Dark luxury theme — Midnight Black (#0a0a0a) background, Champagne Gold (#D4AF37) accents
+- **Fonts**: Playfair Display (headings), Inter (body)
+- **Key Features**:
+  - Home page with hero, brand story, featured products
+  - Collections page with category filters and product grid
+  - Contact page
+  - Slide-out cart drawer with quantity management
+  - Multi-currency support (AED, USD, NGN)
+  - 3-step Royal Inquiry modal (name/phone, custom requests, WhatsApp/Email)
+  - Framer Motion animations throughout
+- **Key Files**:
+  - `src/data/products.ts` — Mock product data (8 items) with Product interface
+  - `src/context/CartContext.tsx` — Global cart state + currency switching
+  - `src/components/Navbar.tsx` — Sticky glassmorphism navbar
+  - `src/components/CartDrawer.tsx` — Cart drawer + Royal Inquiry modal
+  - `src/pages/Home.tsx`, `Collections.tsx`, `Contact.tsx` — Main pages
+
 ## Key Commands
 
 - `pnpm run typecheck` — full typecheck across all packages
