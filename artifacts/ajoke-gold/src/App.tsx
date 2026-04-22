@@ -4,6 +4,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CartProvider } from "@/context/CartContext";
 import { Navbar } from "@/components/Navbar";
+import { Checkout } from './pages/Checkout'; // Adjust this path if you saved it in a 'pages' folder instead
+import { Success } from './components/Success';
 
 import Home from "@/pages/Home";
 import Collections from "@/pages/Collections";
@@ -18,6 +20,8 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/collections" component={Collections} />
       <Route path="/contact" component={Contact} />
+      <Route path="/checkout" component={Checkout} />
+      <Route path="/success" component={Success} />
       <Route component={NotFound} />
     </Switch>
   );

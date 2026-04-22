@@ -27,8 +27,8 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const EXCHANGE_RATES: Record<Currency, number> = {
   AED: 1,
-  USD: 0.27,
-  NGN: 420,
+  USD: 0.272,
+  NGN: 365.5,
 };
 
 const CURRENCY_SYMBOLS: Record<Currency, string> = {

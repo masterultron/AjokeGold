@@ -3,9 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Plus, Minus, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
+import { useLocation } from 'wouter'; // Using your app's actual router
 
 export const CartDrawer: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
   const { cart, removeFromCart, incrementQuantity, decrementQuantity, subtotal, formatPrice } = useCart();
+  
+  // Initialize wouter's navigation hook
+  const [, setLocation] = useLocation(); 
+  
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
 
   return (
@@ -73,7 +78,13 @@ export const CartDrawer: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
                     <span className="text-primary font-medium">{formatPrice(subtotal)}</span>
                   </div>
                   <div className="space-y-3">
-                    <Button className="w-full bg-primary text-black hover:bg-primary/90 font-medium rounded-none h-12 uppercase tracking-widest text-sm" onClick={() => console.log('Checkout clicked', cart)}>
+                    <Button 
+                      className="w-full bg-primary text-black hover:bg-primary/90 font-medium rounded-none h-12 uppercase tracking-widest text-sm" 
+                      onClick={() => {
+                        onClose(); // Close drawer
+                        setLocation('/checkout'); // Route using wouter
+                      }}
+                    >
                       Secure Checkout
                     </Button>
                     <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10 rounded-none h-12 uppercase tracking-widest text-sm" onClick={() => setIsInquiryOpen(true)}>
