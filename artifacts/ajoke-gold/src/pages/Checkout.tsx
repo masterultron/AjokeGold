@@ -5,7 +5,7 @@ import { useLocation } from 'wouter';
 import { Loader2, CreditCard, ShieldCheck } from 'lucide-react';
 
 export const Checkout = () => {
-  const { subtotal, formatPrice } = useCart();
+  const { subtotal, formatPrice, cart, currency } = useCart();
   const [, setLocation] = useLocation();
   const [isProcessing, setIsProcessing] = useState(false);
   const [method, setMethod] = useState<'card' | 'paypal' | 'paystack'>('card');
@@ -24,39 +24,50 @@ export const Checkout = () => {
       amount: Math.round(subtotal * 100),
       currency: 'NGN',
       metadata: {
-        custom_fields: [
-          {
-            display_name: 'Payment Source',
-            variable_name: 'payment_source',
-            value: 'Ajoke Gold Web',
-          },
-          {
-            display_name: 'Customer Name',
-            variable_name: 'buyer_name',
-            value: buyerName,
-          },
-          {
-            display_name: 'Customer Phone',
-            variable_name: 'buyer_phone',
-            value: buyerPhone,
-          },
-        ],
-      },
+  custom_fields: [
+    {
+      display_name: 'Payment Source',
+      variable_name: 'payment_source',
+      value: 'Ajoke Gold Web',
+    },
+    {
+      display_name: 'Customer Name',
+      variable_name: 'buyer_name',
+      value: buyerName,
+    },
+    {
+      display_name: 'Customer Phone',
+      variable_name: 'buyer_phone',
+      value: buyerPhone,
+    },
+    {
+      display_name: 'Items Ordered',
+      variable_name: 'items_ordered',
+      value: cart.map((item) => `${item.product.name} x${item.quantity}`).join(', '),
+    },
+  ],
+},
       callback: async (response: any) => {
         console.log('response', response);
         if (response.status === 'success') {
           // Notification to her
           try {
-            await fetch('/api/paystack-notify', { 
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                reference: response.reference,
-                buyerName,
-                buyerEmail,
-                buyerPhone,
-              }),
-            });
+            await fetch('/api/paystack-notify', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    reference: response.reference,
+    buyerName,
+    buyerEmail,
+    buyerPhone,
+    currency,
+    items: cart.map((item) => ({
+      name: item.product.name,
+      quantity: item.quantity,
+      price: formatPrice(item.product.basePrice),
+    })),
+  }),
+});
           } catch (err) {
             console.error('Failed to send notification:', err);
           }
@@ -81,7 +92,7 @@ export const Checkout = () => {
 
     if (method === 'paypal') {
       const usdAmount = (subtotal / 1600).toFixed(2);
-window.location.href = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=afolabiadejoke756@gmail.com&amount=${usdAmount}&currency_code=USD&item_name=Ajoke+Gold+Boutique+Order&no_shipping=1&return=https://placeholder.netlify.app/success&cancel_return=https://placeholder.netlify.app/checkout`;
+      window.location.href = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=afolabiadejoke756@gmail.com&amount=${usdAmount}&currency_code=USD&item_name=Ajoke+Gold+Boutique+Order&no_shipping=1&return=https://placeholder.netlify.app/success&cancel_return=https://placeholder.netlify.app/checkout`;  
     } else {
       handlePaystackPayment();
     }
@@ -94,7 +105,7 @@ window.location.href = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&busine
 
         <header className="mb-10 text-center">
           <h1 className="font-serif text-3xl text-white mb-2 tracking-tight">Checkout</h1>
-          <p className="text-white/40 text-[10px] uppercase tracking-[0.3em]">Ajoke Gold Boutique Security</p>
+          <p className="text-white/40 text-[10px] uppercase tracking-[0.3em]">Ajoke Gold International Security</p>
         </header>
 
         <div className="flex justify-between items-center border-b border-white/10 pb-6 mb-10">

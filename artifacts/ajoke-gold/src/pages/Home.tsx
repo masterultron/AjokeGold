@@ -57,7 +57,7 @@ export default function Home() {
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-serif text-white mb-8">A Legacy of Opulence</h2>
           <p className="text-white/70 leading-relaxed text-lg md:text-xl font-light">
-            Born in the heart of the Dubai Gold Souk, Ajoke Gold serves discerning collectors who demand perfection. 
+            Born in the heart of the Dubai Gold Souk, Ajoke Gold International serves discerning collectors who demand perfection. 
             Every piece in our collection is meticulously curated, transforming the world's most precious metals and stones 
             into wearable art. Step into our world of exclusive, uncompromised luxury.
           </p>

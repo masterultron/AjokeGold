@@ -26,7 +26,7 @@ export const Navbar: React.FC = () => {
 
         <div className="absolute left-1/2 -translate-x-1/2">
           <Link href="/" className="text-primary font-serif text-2xl tracking-[0.2em] hover:opacity-80 transition-opacity" data-testid="link-home">
-            AJOKE GOLD
+            AJOKE GOLD INTERNATIONAL
           </Link>
         </div>
 

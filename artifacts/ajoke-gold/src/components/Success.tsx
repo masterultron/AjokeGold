@@ -24,7 +24,7 @@ export const Success = () => {
 
         <h1 className="font-serif text-3xl text-white mb-4">Royal Order Confirmed</h1>
         <p className="text-white/60 mb-8 leading-relaxed">
-          Your exquisite selection from Ajoke Gold is being prepared. A concierge will contact you shortly for shipping details.
+          Your exquisite selection from Ajoke Gold International is being prepared. A concierge will contact you shortly for shipping details.
         </p>
 
         <div className="space-y-4">
