@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "latest",
+    "@netlify/functions": "^5.2.0",
     "@radix-ui/react-accordion": "latest",
     "@radix-ui/react-alert-dialog": "latest",
     "@radix-ui/react-aspect-ratio": "latest",

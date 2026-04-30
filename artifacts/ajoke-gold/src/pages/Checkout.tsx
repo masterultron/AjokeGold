@@ -47,7 +47,7 @@ export const Checkout = () => {
         if (response.status === 'success') {
           // Notification to her
           try {
-            await fetch('/api/paystack-notify', {
+            await fetch('/api/paystack-notify', { 
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -80,7 +80,8 @@ export const Checkout = () => {
     setIsProcessing(true);
 
     if (method === 'paypal') {
-      window.location.href = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=YOUR_PAYPAL_EMAIL@ajokegold.com&amount=${subtotal}&currency_code=USD`;
+      const usdAmount = (subtotal / 1600).toFixed(2);
+window.location.href = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=afolabiadejoke756@gmail.com&amount=${usdAmount}&currency_code=USD&item_name=Ajoke+Gold+Boutique+Order&no_shipping=1&return=https://placeholder.netlify.app/success&cancel_return=https://placeholder.netlify.app/checkout`;
     } else {
       handlePaystackPayment();
     }

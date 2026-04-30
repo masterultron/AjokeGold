@@ -4,7 +4,7 @@ import { products } from '@/data/products';
 import { useCart } from '@/context/CartContext';
 import { Plus } from 'lucide-react';
 
-const CATEGORIES = ["All", "Necklaces", "Rings", "Earrings", "Bracelets", "Sets"];
+const CATEGORIES = ["All", "Necklaces", "Rings", "Earrings & Pendants", "Bracelets", "Sets"];
 
 export default function Collections() {
   const [activeCategory, setActiveCategory] = useState("All");
