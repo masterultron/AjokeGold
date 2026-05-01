@@ -10,43 +10,45 @@ export default function Contact() {
   const [method, setMethod] = useState<'email' | 'whatsapp' | null>(null);
 
   const VENDOR_EMAIL = 'ajbeautystore756@gmail.com';
-  const VENDOR_WHATSAPP = '971586133185'; // no + for WhatsApp URL
+  const VENDOR_WHATSAPP = '2347066240431';
 
-  const handleSubmit = (e: React.FormEvent, channel: 'email' | 'whatsapp') => {
-    e.preventDefault();
-
-    if (!name.trim() || !email.trim() || !message.trim()) {
+  const validate = () => {
+    if (name.trim() === '' || email.trim() === '' || message.trim() === '') {
       alert('Please fill in all fields before sending.');
-      return;
+      return false;
     }
+    return true;
+  };
 
-    if (channel === 'email') {
-      const subject = encodeURIComponent(`Inquiry from ${name} — Ajoke Gold`);
-      const body = encodeURIComponent(
-        `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
-      );
-      window.open(`mailto:${VENDOR_EMAIL}?subject=${subject}&body=${body}`, '_blank');
-    }
-
-    if (channel === 'whatsapp') {
-      const text = encodeURIComponent(
-        `Hello Ajoke Gold,\n\nMy name is ${name} (${email}).\n\n${message}`
-      );
-      window.open(`https://wa.me/${VENDOR_WHATSAPP}?text=${text}`, '_blank');
-    }
-
-    setMethod(channel);
+  const handleEmail = () => {
+    if (!validate()) return;
+    const subject = encodeURIComponent('Inquiry from ' + name + ' - Ajoke Gold');
+    const body = encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\nMessage:\n' + message);
+    window.open('mailto:' + VENDOR_EMAIL + '?subject=' + subject + '&body=' + body, '_blank');
+    setMethod('email');
     setShowSuccess(true);
     setName('');
     setEmail('');
     setMessage('');
   };
 
+  // const handleWhatsAppClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  //   if (!validate()) {
+  //     e.preventDefault();
+  //     return;
+  //   }
+  //   setMethod('whatsapp');
+  //   setShowSuccess(true);
+  //   setName('');
+  //   setEmail('');
+  //   setMessage('');
+  // };
+
+  
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white pt-32 pb-24 px-6 md:px-12 flex items-center justify-center">
       <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-16">
 
-        {/* Left — Info */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
@@ -54,9 +56,8 @@ export default function Contact() {
         >
           <h1 className="text-4xl md:text-5xl font-serif text-white mb-8">Private Viewing</h1>
           <p className="text-white/60 leading-relaxed mb-12">
-            We welcome discerning clients to experience our collections in person at our Dubai Gold Souk showroom. Please reach out to schedule a private viewing or for any specialized inquiries.
+            We welcome discerning clients to experience our collections in person at our Dubai Gold Souk showroom.
           </p>
-
           <div className="space-y-8 text-sm tracking-wider uppercase">
             <div>
               <p className="text-primary mb-2">Boutique</p>
@@ -73,7 +74,6 @@ export default function Contact() {
           </div>
         </motion.div>
 
-        {/* Right — Form */}
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
@@ -81,60 +81,63 @@ export default function Contact() {
           className="bg-white/5 p-8 md:p-12 border border-white/10"
         >
           <h2 className="font-serif text-2xl text-white mb-8">Send an Inquiry</h2>
-          <form className="space-y-6">
-            <div>
-              <input
-                type="text"
-                placeholder="Full Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                className="w-full bg-transparent border-b border-white/20 py-3 text-white placeholder:text-white/30 focus:border-primary focus:outline-none transition-colors"
-              />
-            </div>
-            <div>
-              <input
-                type="email"
-                placeholder="Email Address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full bg-transparent border-b border-white/20 py-3 text-white placeholder:text-white/30 focus:border-primary focus:outline-none transition-colors"
-              />
-            </div>
-            <div>
-              <textarea
-                placeholder="Your Message"
-                rows={4}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                required
-                className="w-full bg-transparent border-b border-white/20 py-3 text-white placeholder:text-white/30 focus:border-primary focus:outline-none transition-colors resize-none"
-              />
-            </div>
-
-            {/* Two buttons */}
-            <div className="grid grid-cols-2 gap-3 mt-4">
+          <div className="space-y-6">
+            <input
+              type="text"
+              placeholder="Full Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full bg-transparent border-b border-white/20 py-3 text-white placeholder:text-white/30 focus:border-primary focus:outline-none transition-colors"
+            />
+            <input
+              type="email"
+              placeholder="Email Address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-transparent border-b border-white/20 py-3 text-white placeholder:text-white/30 focus:border-primary focus:outline-none transition-colors"
+            />
+            <textarea
+              placeholder="Your Message"
+              rows={4}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="w-full bg-transparent border-b border-white/20 py-3 text-white placeholder:text-white/30 focus:border-primary focus:outline-none transition-colors resize-none"
+            />
+            <div className="grid grid-cols-2 gap-3 pt-2">
               <button
-                type="submit"
-                onClick={(e) => handleSubmit(e, 'email')}
+                type="button"
+                onClick={handleEmail}
                 className="bg-primary text-black hover:bg-white hover:text-black transition-colors py-4 uppercase tracking-widest text-xs font-bold"
               >
                 Send via Email
               </button>
               <button
-                type="submit"
-                onClick={(e) => handleSubmit(e, 'whatsapp')}
-                className="bg-[#25D366] text-white hover:bg-[#1ebe57] transition-colors py-4 uppercase tracking-widest text-xs font-bold"
-              >
-                Send via WhatsApp
-              </button>
+  type="button"
+  onClick={() => {
+    if (name.trim() === '' || email.trim() === '' || message.trim() === '') {
+      alert('Please fill in all fields before sending.');
+      return;
+    }
+    const text = encodeURIComponent(
+      'Hello Ajoke Gold,\n\nMy name is ' + name + ' (' + email + ').\n\n' + message
+    );
+    const url = 'https://wa.me/' + VENDOR_WHATSAPP + '?text=' + text;
+    window.open(url, '_blank');
+    setMethod('whatsapp');
+    setShowSuccess(true);
+    setName('');
+    setEmail('');
+    setMessage('');
+  }}
+  className="bg-[#25D366] text-white hover:bg-[#1ebe57] transition-colors py-4 uppercase tracking-widest text-xs font-bold flex items-center justify-center"
+>
+  Send via WhatsApp
+</button>
             </div>
-          </form>
+          </div>
         </motion.div>
       </div>
 
-      {/* Success Modal */}
       <AnimatePresence>
         {showSuccess && (
           <motion.div
@@ -149,31 +152,24 @@ export default function Contact() {
               exit={{ opacity: 0, scale: 0.9 }}
               className="bg-[#0a0a0a] border border-white/10 p-10 max-w-sm w-full text-center relative shadow-2xl"
             >
-              {/* Gold top bar */}
               <div className="absolute top-0 left-0 w-full h-1 bg-primary" />
-
-              {/* Close button */}
               <button
                 onClick={() => setShowSuccess(false)}
                 className="absolute top-4 right-4 text-white/30 hover:text-white transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
-
-              {/* Icon */}
               <div className="flex justify-center mb-5">
                 <div className="w-16 h-16 rounded-full border border-primary/40 flex items-center justify-center bg-primary/5">
                   <CheckCircle2 className="w-8 h-8 text-primary" />
                 </div>
               </div>
-
               <h3 className="font-serif text-2xl text-white mb-3">Inquiry Sent</h3>
               <p className="text-white/50 text-sm leading-relaxed mb-6">
                 Your message has been sent via{' '}
                 <span className="text-primary font-semibold capitalize">{method}</span>.
-                Our concierge will be in touch with you shortly.
+                Our concierge will be in touch wit`h you shortly.
               </p>
-
               <button
                 onClick={() => setShowSuccess(false)}
                 className="w-full bg-primary text-black hover:bg-primary/90 py-3 uppercase tracking-widest text-xs font-bold transition-colors"
