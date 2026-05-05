@@ -19,7 +19,7 @@ export const Checkout = () => {
   const handlePaystackPayment = () => {
     // @ts-ignore
     const handler = window.PaystackPop.setup({
-      key: 'pk_test_5b1a9cd7dd3e88956accf9634c06c825f4989444',
+      key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
       email: buyerEmail,
       amount: Math.round(subtotal * 100),
       currency: 'NGN',
@@ -92,7 +92,7 @@ export const Checkout = () => {
 
     if (method === 'paypal') {
       const usdAmount = (subtotal / 1600).toFixed(2);
-      window.location.href = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=afolabiadejoke756@gmail.com&amount=${usdAmount}&currency_code=USD&item_name=Ajoke+Gold+Boutique+Order&no_shipping=1&return=https://placeholder.netlify.app/success&cancel_return=https://placeholder.netlify.app/checkout`;  
+      window.location.href = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=ajbeautystore756@gmail.com&amount=${usdAmount}&currency_code=USD&item_name=Ajoke+Gold+Boutique+Order&no_shipping=1&return=https://ajoke-gold-international.netlify.app/success&cancel_return=https://ajoke-gold-international.netlify.app/checkout`;  
     } else {
       handlePaystackPayment();
     }

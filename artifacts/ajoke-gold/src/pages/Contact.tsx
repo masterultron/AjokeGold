@@ -13,42 +13,48 @@ export default function Contact() {
   const VENDOR_WHATSAPP = '2347066240431';
 
   const validate = () => {
-    if (name.trim() === '' || email.trim() === '' || message.trim() === '') {
+    if (!name.trim() || !email.trim() || !message.trim()) {
       alert('Please fill in all fields before sending.');
       return false;
     }
     return true;
   };
 
-  const handleEmail = () => {
+  const handleSend = (type: 'email' | 'whatsapp') => {
     if (!validate()) return;
-    const subject = encodeURIComponent('Inquiry from ' + name + ' - Ajoke Gold');
-    const body = encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\nMessage:\n' + message);
-    window.open('mailto:' + VENDOR_EMAIL + '?subject=' + subject + '&body=' + body, '_blank');
-    setMethod('email');
+
+    const encodedName = encodeURIComponent(name);
+    const encodedEmail = encodeURIComponent(email);
+    const encodedMessage = encodeURIComponent(message);
+
+    let url = '';
+
+    if (type === 'email') {
+      const subject = encodeURIComponent(`Inquiry from ${name} - Ajoke Gold`);
+      const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+      url = `mailto:${VENDOR_EMAIL}?subject=${subject}&body=${body}`;
+    } else {
+      const text = encodeURIComponent(`Hello Ajoke Gold,\n\nMy name is ${name} (${email}).\n\n${message}`);
+      url = `https://wa.me/${VENDOR_WHATSAPP}?text=${text}`;
+    }
+
+    // Trigger the external app
+    window.location.href = url;
+
+    // UI Updates
+    setMethod(type);
     setShowSuccess(true);
+    
+    // Clear form
     setName('');
     setEmail('');
     setMessage('');
   };
 
-  // const handleWhatsAppClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-  //   if (!validate()) {
-  //     e.preventDefault();
-  //     return;
-  //   }
-  //   setMethod('whatsapp');
-  //   setShowSuccess(true);
-  //   setName('');
-  //   setEmail('');
-  //   setMessage('');
-  // };
-
-  
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white pt-32 pb-24 px-6 md:px-12 flex items-center justify-center">
       <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-16">
-
+        {/* Left Side: Info */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
@@ -65,7 +71,7 @@ export default function Contact() {
             </div>
             <div>
               <p className="text-primary mb-2">Concierge</p>
-              <p className="text-white/80">+971 58 613 3185<br />ajbeautystore756@gmail.com</p>
+              <p className="text-white/80">+971 58 613 3185<br />{VENDOR_EMAIL}</p>
             </div>
             <div>
               <p className="text-primary mb-2">Hours</p>
@@ -74,6 +80,7 @@ export default function Contact() {
           </div>
         </motion.div>
 
+        {/* Right Side: Form */}
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
@@ -106,38 +113,25 @@ export default function Contact() {
             <div className="grid grid-cols-2 gap-3 pt-2">
               <button
                 type="button"
-                onClick={handleEmail}
-                className="bg-primary text-black hover:bg-white hover:text-black transition-colors py-4 uppercase tracking-widest text-xs font-bold"
+                onClick={() => handleSend('email')}
+                className="bg-primary text-black hover:bg-white transition-colors py-4 uppercase tracking-widest text-xs font-bold"
               >
                 Send via Email
               </button>
+
               <button
-  type="button"
-  onClick={() => {
-    if (name.trim() === '' || email.trim() === '' || message.trim() === '') {
-      alert('Please fill in all fields before sending.');
-      return;
-    }
-    const text = encodeURIComponent(
-      'Hello Ajoke Gold,\n\nMy name is ' + name + ' (' + email + ').\n\n' + message
-    );
-    const url = 'https://wa.me/' + VENDOR_WHATSAPP + '?text=' + text;
-    window.open(url, '_blank');
-    setMethod('whatsapp');
-    setShowSuccess(true);
-    setName('');
-    setEmail('');
-    setMessage('');
-  }}
-  className="bg-[#25D366] text-white hover:bg-[#1ebe57] transition-colors py-4 uppercase tracking-widest text-xs font-bold flex items-center justify-center"
->
-  Send via WhatsApp
-</button>
+                type="button"
+                onClick={() => handleSend('whatsapp')}
+                className="bg-[#25D366] text-white hover:bg-[#1ebe57] transition-colors py-4 uppercase tracking-widest text-xs font-bold"
+              >
+                Send via WhatsApp
+              </button>
             </div>
           </div>
         </motion.div>
       </div>
 
+      {/* Success Modal */}
       <AnimatePresence>
         {showSuccess && (
           <motion.div
@@ -166,9 +160,9 @@ export default function Contact() {
               </div>
               <h3 className="font-serif text-2xl text-white mb-3">Inquiry Sent</h3>
               <p className="text-white/50 text-sm leading-relaxed mb-6">
-                Your message has been sent via{' '}
+                Your message has been initiated via{' '}
                 <span className="text-primary font-semibold capitalize">{method}</span>.
-                Our concierge will be in touch wit`h you shortly.
+                Please complete the send in your app.
               </p>
               <button
                 onClick={() => setShowSuccess(false)}
