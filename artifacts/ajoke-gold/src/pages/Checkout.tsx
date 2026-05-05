@@ -5,7 +5,14 @@ import { useLocation } from 'wouter';
 import { Loader2, CreditCard, ShieldCheck, AlertTriangle } from 'lucide-react';
 
 export const Checkout = () => {
-  const { subtotal, formatPrice, cart, currency } = useCart();
+  const {
+    subtotal,
+    subtotalInNGN,
+    subtotalInUSD,
+    formatPrice,
+    cart,
+    currency,
+  } = useCart();
   const [, setLocation] = useLocation();
   const [isProcessing, setIsProcessing] = useState(false);
   const [method, setMethod] = useState<'card' | 'paypal' | 'paystack'>('card');
@@ -52,7 +59,8 @@ export const Checkout = () => {
       const handler = window.PaystackPop.setup({
         key: publicKey,
         email: buyerEmail,
-        amount: Math.round(subtotal * 100),
+        // Convert AED-based subtotal to NGN, then to kobo (×100)
+        amount: Math.round(subtotalInNGN * 100),
         currency: 'NGN',
         metadata: {
           custom_fields: [
@@ -122,7 +130,8 @@ export const Checkout = () => {
     setIsProcessing(true);
 
     if (method === 'paypal') {
-      const usdAmount = (subtotal / 1600).toFixed(2);
+      // Use real AED→USD conversion from cart context (no more hardcoded /1600)
+      const usdAmount = subtotalInUSD.toFixed(2);
       window.location.href = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=ajbeautystore756@gmail.com&amount=${usdAmount}&currency_code=USD&item_name=Ajoke+Gold+Boutique+Order&no_shipping=1&return=https://ajoke-gold-international.netlify.app/success&cancel_return=https://ajoke-gold-international.netlify.app/checkout`;
     } else {
       handlePaystackPayment();

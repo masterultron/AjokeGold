@@ -15,12 +15,14 @@ interface CartContextType {
   incrementQuantity: (productId: string) => void;
   decrementQuantity: (productId: string) => void;
   clearCart: () => void;
-  
+
   currency: Currency;
   setCurrency: (c: Currency) => void;
   formatPrice: (priceInAED: number) => string;
   totalItems: number;
-  subtotal: number; // in AED
+  subtotal: number;       // in AED (base currency)
+  subtotalInNGN: number;  // converted to NGN — use this for Paystack
+  subtotalInUSD: number;  // converted to USD — use this for PayPal
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -83,7 +85,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const totalItems = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
-  const subtotal = useMemo(() => cart.reduce((sum, item) => sum + item.product.basePrice * item.quantity, 0), [cart]);
+
+  const subtotal = useMemo(
+    () => cart.reduce((sum, item) => sum + item.product.basePrice * item.quantity, 0),
+    [cart]
+  );
+
+  const subtotalInNGN = useMemo(() => subtotal * EXCHANGE_RATES.NGN, [subtotal]);
+  const subtotalInUSD = useMemo(() => subtotal * EXCHANGE_RATES.USD, [subtotal]);
 
   return (
     <CartContext.Provider
@@ -99,6 +108,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         formatPrice,
         totalItems,
         subtotal,
+        subtotalInNGN,
+        subtotalInUSD,
       }}
     >
       {children}
