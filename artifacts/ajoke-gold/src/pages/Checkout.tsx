@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
 import { useLocation } from 'wouter';
-import { Loader2, CreditCard, ShieldCheck } from 'lucide-react';
+import { Loader2, CreditCard, ShieldCheck, AlertTriangle } from 'lucide-react';
 
 export const Checkout = () => {
   const { subtotal, formatPrice, cart, currency } = useCart();
@@ -15,37 +15,34 @@ export const Checkout = () => {
   const [buyerEmail, setBuyerEmail] = useState('');
   const [buyerPhone, setBuyerPhone] = useState('');
 
-  // --- LOAD PAYSTACK SCRIPT ON MOUNT (in case it's not in index.html) ---
+  // Card and Paystack only support NGN in this setup
+  const requiresNaira = method === 'card' || method === 'paystack';
+  const currencyMismatch = requiresNaira && currency !== 'NGN';
+
+  // --- LOAD PAYSTACK SCRIPT ON MOUNT ---
   useEffect(() => {
     // @ts-ignore
-    if (window.PaystackPop) return; // already loaded
-    if (document.querySelector('script[src*="js.paystack.co"]')) return; // already added
+    if (window.PaystackPop) return;
+    if (document.querySelector('script[src*="js.paystack.co"]')) return;
 
     const script = document.createElement('script');
     script.src = 'https://js.paystack.co/v1/inline.js';
     script.async = true;
-    script.onload = () => console.log('Paystack script loaded');
-    script.onerror = () => console.error('Paystack script failed to load');
     document.head.appendChild(script);
   }, []);
 
-  // --- UNIVERSAL PAYSTACK HANDLER (For Card & Paystack options) ---
+  // --- PAYSTACK HANDLER ---
   const handlePaystackPayment = () => {
-    // Diagnostics — surface the real problem instead of spinning forever
     // @ts-ignore
     if (!window.PaystackPop) {
-      alert(
-        'Paystack is still loading or was blocked (ad blocker / network). Please wait a moment and try again, or disable your ad blocker.'
-      );
+      alert('Paystack is still loading. Please try again in a moment.');
       setIsProcessing(false);
       return;
     }
 
     const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
     if (!publicKey) {
-      alert(
-        'Paystack public key is missing. Add VITE_PAYSTACK_PUBLIC_KEY to Netlify env vars and redeploy.'
-      );
+      alert('Paystack public key is missing. Please contact support.');
       setIsProcessing(false);
       return;
     }
@@ -106,13 +103,22 @@ export const Checkout = () => {
       handler.openIframe();
     } catch (err) {
       console.error('Paystack setup error:', err);
-      alert('Paystack failed to open. Check the browser console for details.');
+      alert('Paystack failed to open. Please try again.');
       setIsProcessing(false);
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Block card/paystack if cart isn't in NGN
+    if (currencyMismatch) {
+      alert(
+        `Card and Paystack only support payments in Naira (NGN). Your cart is currently in ${currency}. Please go back and switch your currency to NGN before continuing.`
+      );
+      return;
+    }
+
     setIsProcessing(true);
 
     if (method === 'paypal') {
@@ -195,6 +201,30 @@ export const Checkout = () => {
             </button>
           </div>
 
+          {/* CURRENCY MISMATCH WARNING */}
+          {currencyMismatch && (
+            <div className="border border-red-500/30 bg-red-500/5 p-5 flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
+              <div className="flex-1">
+                <p className="text-red-300 text-sm font-semibold mb-1 uppercase tracking-wider">
+                  Currency Not Supported
+                </p>
+                <p className="text-white/70 text-sm leading-relaxed mb-3">
+                  Card and Paystack only accept payments in <span className="text-primary font-bold">Naira (NGN)</span>.
+                  Your cart is currently in <span className="text-primary font-bold">{currency}</span>.
+                  Please go back and switch your currency to NGN, or use PayPal instead.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setLocation('/cart')}
+                  className="text-[11px] uppercase tracking-[0.2em] text-primary border border-primary/40 px-4 py-2 hover:bg-primary/10 transition-colors"
+                >
+                  ← Back to Cart
+                </button>
+              </div>
+            </div>
+          )}
+
           <div className="py-12 border border-dashed border-white/10 bg-white/5 text-center px-6">
             <p className="text-white/70 text-sm leading-relaxed">
               You will be redirected to the secure{' '}
@@ -207,10 +237,16 @@ export const Checkout = () => {
 
           <Button
             type="submit"
-            disabled={isProcessing}
-            className="w-full bg-primary text-black hover:bg-primary/90 rounded-none h-14 uppercase tracking-[0.2em] font-bold transition-all"
+            disabled={isProcessing || currencyMismatch}
+            className="w-full bg-primary text-black hover:bg-primary/90 rounded-none h-14 uppercase tracking-[0.2em] font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isProcessing ? <Loader2 className="animate-spin mr-2" /> : `Proceed to Payment`}
+            {isProcessing ? (
+              <Loader2 className="animate-spin mr-2" />
+            ) : currencyMismatch ? (
+              `Switch to NGN to Continue`
+            ) : (
+              `Proceed to Payment`
+            )}
           </Button>
         </form>
 
