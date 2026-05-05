@@ -24,65 +24,52 @@ export const Checkout = () => {
       amount: Math.round(subtotal * 100),
       currency: 'NGN',
       metadata: {
-  custom_fields: [
-    {
-      display_name: 'Payment Source',
-      variable_name: 'payment_source',
-      value: 'Ajoke Gold Web',
-    },
-    {
-      display_name: 'Customer Name',
-      variable_name: 'buyer_name',
-      value: buyerName,
-    },
-    {
-      display_name: 'Customer Phone',
-      variable_name: 'buyer_phone',
-      value: buyerPhone,
-    },
-    {
-      display_name: 'Items Ordered',
-      variable_name: 'items_ordered',
-      value: cart.map((item) => `${item.product.name} x${item.quantity}`).join(', '),
-    },
-  ],
-},
-      callback: async (response: any) => {
+        custom_fields: [
+          { display_name: 'Payment Source', variable_name: 'payment_source', value: 'Ajoke Gold Web' },
+          { display_name: 'Customer Name', variable_name: 'buyer_name', value: buyerName },
+          { display_name: 'Customer Phone', variable_name: 'buyer_phone', value: buyerPhone },
+          { display_name: 'Items Ordered', variable_name: 'items_ordered', value: cart.map((item) => `${item.product.name} x${item.quantity}`).join(', ') },
+        ],
+      },
+      callback: function(response: any) {
         console.log('response', response);
         if (response.status === 'success') {
-          // Notification to her
-          try {
-            await fetch('/api/paystack-notify', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    reference: response.reference,
-    buyerName,
-    buyerEmail,
-    buyerPhone,
-    currency,
-    items: cart.map((item) => ({
-      name: item.product.name,
-      quantity: item.quantity,
-      price: formatPrice(item.product.basePrice),
-    })),
-  }),
-});
-          } catch (err) {
+          // Notification to her using standard promises instead of async/await
+          fetch('/api/paystack-notify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              reference: response.reference,
+              buyerName,
+              buyerEmail,
+              buyerPhone,
+              currency,
+              items: cart.map((item) => ({
+                name: item.product.name,
+                quantity: item.quantity,
+                price: formatPrice(item.product.basePrice),
+              })),
+            }),
+          })
+          .then(() => {
+            setIsProcessing(false);
+            setLocation('/success');
+          })
+          .catch((err) => {
             console.error('Failed to send notification:', err);
-          }
-
-          setIsProcessing(false);
-          setLocation('/success');
+            setIsProcessing(false);
+            setLocation('/success');
+          });
         } else {
           alert('Payment failed or was cancelled. Please try again.');
           setIsProcessing(false);
         }
       },
-      onClose: () => {
+      onClose: function() {
         setIsProcessing(false);
       },
     });
+    
     handler.openIframe();
   };
 
