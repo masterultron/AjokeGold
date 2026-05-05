@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
 import { useLocation } from 'wouter';
@@ -15,62 +15,100 @@ export const Checkout = () => {
   const [buyerEmail, setBuyerEmail] = useState('');
   const [buyerPhone, setBuyerPhone] = useState('');
 
+  // --- LOAD PAYSTACK SCRIPT ON MOUNT (in case it's not in index.html) ---
+  useEffect(() => {
+    // @ts-ignore
+    if (window.PaystackPop) return; // already loaded
+    if (document.querySelector('script[src*="js.paystack.co"]')) return; // already added
+
+    const script = document.createElement('script');
+    script.src = 'https://js.paystack.co/v1/inline.js';
+    script.async = true;
+    script.onload = () => console.log('Paystack script loaded');
+    script.onerror = () => console.error('Paystack script failed to load');
+    document.head.appendChild(script);
+  }, []);
+
   // --- UNIVERSAL PAYSTACK HANDLER (For Card & Paystack options) ---
   const handlePaystackPayment = () => {
+    // Diagnostics — surface the real problem instead of spinning forever
     // @ts-ignore
-    const handler = window.PaystackPop.setup({
-      key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
-      email: buyerEmail,
-      amount: Math.round(subtotal * 100),
-      currency: 'NGN',
-      metadata: {
-        custom_fields: [
-          { display_name: 'Payment Source', variable_name: 'payment_source', value: 'Ajoke Gold Web' },
-          { display_name: 'Customer Name', variable_name: 'buyer_name', value: buyerName },
-          { display_name: 'Customer Phone', variable_name: 'buyer_phone', value: buyerPhone },
-          { display_name: 'Items Ordered', variable_name: 'items_ordered', value: cart.map((item) => `${item.product.name} x${item.quantity}`).join(', ') },
-        ],
-      },
-      callback: function(response: any) {
-        console.log('response', response);
-        if (response.status === 'success') {
-          // Notification to her using standard promises instead of async/await
-          fetch('/api/paystack-notify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              reference: response.reference,
-              buyerName,
-              buyerEmail,
-              buyerPhone,
-              currency,
-              items: cart.map((item) => ({
-                name: item.product.name,
-                quantity: item.quantity,
-                price: formatPrice(item.product.basePrice),
-              })),
-            }),
-          })
-          .then(() => {
+    if (!window.PaystackPop) {
+      alert(
+        'Paystack is still loading or was blocked (ad blocker / network). Please wait a moment and try again, or disable your ad blocker.'
+      );
+      setIsProcessing(false);
+      return;
+    }
+
+    const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
+    if (!publicKey) {
+      alert(
+        'Paystack public key is missing. Add VITE_PAYSTACK_PUBLIC_KEY to Netlify env vars and redeploy.'
+      );
+      setIsProcessing(false);
+      return;
+    }
+
+    try {
+      // @ts-ignore
+      const handler = window.PaystackPop.setup({
+        key: publicKey,
+        email: buyerEmail,
+        amount: Math.round(subtotal * 100),
+        currency: 'NGN',
+        metadata: {
+          custom_fields: [
+            { display_name: 'Payment Source', variable_name: 'payment_source', value: 'Ajoke Gold Web' },
+            { display_name: 'Customer Name', variable_name: 'buyer_name', value: buyerName },
+            { display_name: 'Customer Phone', variable_name: 'buyer_phone', value: buyerPhone },
+            { display_name: 'Items Ordered', variable_name: 'items_ordered', value: cart.map((item) => `${item.product.name} x${item.quantity}`).join(', ') },
+          ],
+        },
+        callback: function (response: any) {
+          console.log('response', response);
+          if (response.status === 'success') {
+            fetch('/api/paystack-notify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                reference: response.reference,
+                buyerName,
+                buyerEmail,
+                buyerPhone,
+                currency,
+                items: cart.map((item) => ({
+                  name: item.product.name,
+                  quantity: item.quantity,
+                  price: formatPrice(item.product.basePrice),
+                })),
+              }),
+            })
+              .then(() => {
+                setIsProcessing(false);
+                setLocation('/success');
+              })
+              .catch((err) => {
+                console.error('Failed to send notification:', err);
+                setIsProcessing(false);
+                setLocation('/success');
+              });
+          } else {
+            alert('Payment failed or was cancelled. Please try again.');
             setIsProcessing(false);
-            setLocation('/success');
-          })
-          .catch((err) => {
-            console.error('Failed to send notification:', err);
-            setIsProcessing(false);
-            setLocation('/success');
-          });
-        } else {
-          alert('Payment failed or was cancelled. Please try again.');
+          }
+        },
+        onClose: function () {
           setIsProcessing(false);
-        }
-      },
-      onClose: function() {
-        setIsProcessing(false);
-      },
-    });
-    
-    handler.openIframe();
+        },
+      });
+
+      handler.openIframe();
+    } catch (err) {
+      console.error('Paystack setup error:', err);
+      alert('Paystack failed to open. Check the browser console for details.');
+      setIsProcessing(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -79,7 +117,7 @@ export const Checkout = () => {
 
     if (method === 'paypal') {
       const usdAmount = (subtotal / 1600).toFixed(2);
-      window.location.href = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=ajbeautystore756@gmail.com&amount=${usdAmount}&currency_code=USD&item_name=Ajoke+Gold+Boutique+Order&no_shipping=1&return=https://ajoke-gold-international.netlify.app/success&cancel_return=https://ajoke-gold-international.netlify.app/checkout`;  
+      window.location.href = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=ajbeautystore756@gmail.com&amount=${usdAmount}&currency_code=USD&item_name=Ajoke+Gold+Boutique+Order&no_shipping=1&return=https://ajoke-gold-international.netlify.app/success&cancel_return=https://ajoke-gold-international.netlify.app/checkout`;
     } else {
       handlePaystackPayment();
     }
