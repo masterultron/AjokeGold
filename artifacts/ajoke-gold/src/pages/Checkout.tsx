@@ -2,7 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
 import { useLocation } from 'wouter';
-import { Loader2, CreditCard, ShieldCheck, AlertTriangle } from 'lucide-react';
+import { Loader2, CreditCard, ShieldCheck, AlertTriangle, Truck, Store, Mail, MapPin } from 'lucide-react';
+
+// --- PICKUP ADDRESS (single source of truth, used in UI + email) ---
+const PICKUP_ADDRESS = {
+  name: 'Abdul Bari',
+  line1: '5 Building, 92, 24 Street, 146',
+  line2: 'Omar Bin Al Khattab Road',
+  area: 'Al Murar, Deira',
+  city: 'Dubai Municipality',
+};
+
+const formatPickupAddress = () =>
+  `${PICKUP_ADDRESS.name}\n${PICKUP_ADDRESS.line1}\n${PICKUP_ADDRESS.line2}\n${PICKUP_ADDRESS.area}\n${PICKUP_ADDRESS.city}`;
 
 export const Checkout = () => {
   const {
@@ -16,6 +28,9 @@ export const Checkout = () => {
   const [, setLocation] = useLocation();
   const [isProcessing, setIsProcessing] = useState(false);
   const [method, setMethod] = useState<'card' | 'paypal' | 'paystack'>('card');
+
+  // --- FULFILLMENT (Pickup vs Delivery) ---
+  const [fulfillment, setFulfillment] = useState<'pickup' | 'delivery'>('pickup');
 
   // --- BUYER INFO STATE ---
   const [buyerName, setBuyerName] = useState('');
@@ -59,7 +74,6 @@ export const Checkout = () => {
       const handler = window.PaystackPop.setup({
         key: publicKey,
         email: buyerEmail,
-        // Convert AED-based subtotal to NGN, then to kobo (×100)
         amount: Math.round(subtotalInNGN * 100),
         currency: 'NGN',
         metadata: {
@@ -67,6 +81,10 @@ export const Checkout = () => {
             { display_name: 'Payment Source', variable_name: 'payment_source', value: 'Ajoke Gold Web' },
             { display_name: 'Customer Name', variable_name: 'buyer_name', value: buyerName },
             { display_name: 'Customer Phone', variable_name: 'buyer_phone', value: buyerPhone },
+            { display_name: 'Fulfillment', variable_name: 'fulfillment', value: fulfillment },
+            ...(fulfillment === 'pickup'
+              ? [{ display_name: 'Pickup Address', variable_name: 'pickup_address', value: formatPickupAddress().replace(/\n/g, ', ') }]
+              : []),
             { display_name: 'Items Ordered', variable_name: 'items_ordered', value: cart.map((item) => `${item.product.name} x${item.quantity}`).join(', ') },
           ],
         },
@@ -81,6 +99,8 @@ export const Checkout = () => {
                 buyerName,
                 buyerEmail,
                 buyerPhone,
+                fulfillment,
+                pickupAddress: fulfillment === 'pickup' ? PICKUP_ADDRESS : null,
                 currency,
                 items: cart.map((item) => ({
                   name: item.product.name,
@@ -127,10 +147,17 @@ export const Checkout = () => {
       return;
     }
 
+    // Confirm extra delivery charge if delivery is selected
+    if (fulfillment === 'delivery') {
+      const ok = window.confirm(
+        'Please note: An additional delivery fee will be communicated to you separately and paid later, after your order is confirmed. Do you want to continue?'
+      );
+      if (!ok) return;
+    }
+
     setIsProcessing(true);
 
     if (method === 'paypal') {
-      // Use real AED→USD conversion from cart context (no more hardcoded /1600)
       const usdAmount = subtotalInUSD.toFixed(2);
       window.location.href = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=ajbeautystore756@gmail.com&amount=${usdAmount}&currency_code=USD&item_name=Ajoke+Gold+Boutique+Order&no_shipping=1&return=https://ajoke-gold-international.netlify.app/success&cancel_return=https://ajoke-gold-international.netlify.app/checkout`;
     } else {
@@ -190,6 +217,72 @@ export const Checkout = () => {
                 className="w-full bg-white/5 border border-white/10 text-white placeholder:text-white/20 px-4 py-3 text-sm focus:outline-none focus:border-primary/50 transition-colors"
               />
             </div>
+          </div>
+
+          {/* FULFILLMENT SELECTION */}
+          <div>
+            <p className="text-white/40 text-[10px] uppercase tracking-[0.2em] mb-3">Fulfillment Method</p>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setFulfillment('pickup')}
+                className={`flex flex-col items-center p-4 border transition-all ${
+                  fulfillment === 'pickup'
+                    ? 'border-primary bg-primary/5 shadow-[0_0_15px_rgba(212,175,55,0.1)]'
+                    : 'border-white/10 opacity-30 hover:opacity-100'
+                }`}
+              >
+                <Store className={`w-5 h-5 mb-2 ${fulfillment === 'pickup' ? 'text-primary' : 'text-white'}`} />
+                <span className="text-[10px] uppercase tracking-widest text-white font-bold">Pickup</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setFulfillment('delivery')}
+                className={`flex flex-col items-center p-4 border transition-all ${
+                  fulfillment === 'delivery'
+                    ? 'border-primary bg-primary/5 shadow-[0_0_15px_rgba(212,175,55,0.1)]'
+                    : 'border-white/10 opacity-30 hover:opacity-100'
+                }`}
+              >
+                <Truck className={`w-5 h-5 mb-2 ${fulfillment === 'delivery' ? 'text-primary' : 'text-white'}`} />
+                <span className="text-[10px] uppercase tracking-widest text-white font-bold">Delivery</span>
+              </button>
+            </div>
+
+            {/* DYNAMIC INFO BANNER */}
+            {fulfillment === 'pickup' ? (
+              <div className="mt-3 border border-primary/20 bg-primary/5 p-4 space-y-3">
+                <div className="flex items-start gap-3">
+                  <MapPin className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <div className="flex-1">
+                    <p className="text-primary text-[10px] uppercase tracking-[0.2em] font-bold mb-2">Pickup Location</p>
+                    <p className="text-white text-sm leading-relaxed whitespace-pre-line">
+                      {formatPickupAddress()}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 border-t border-white/5 pt-3">
+                  <Mail className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                  <p className="text-white/70 text-xs leading-relaxed">
+                    A copy of this address will be sent to{' '}
+                    <span className="text-primary font-bold">
+                      {buyerEmail || 'your email address'}
+                    </span>{' '}
+                    once payment is confirmed.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-3 border border-yellow-500/30 bg-yellow-500/5 p-4 flex items-start gap-3">
+                <AlertTriangle className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
+                <p className="text-white/70 text-xs leading-relaxed">
+                  An additional <span className="text-yellow-300 font-bold">delivery fee</span> will be
+                  communicated to you separately and paid <span className="text-yellow-300 font-bold">later</span>,
+                  after your order is confirmed.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* PAYMENT METHOD SELECTION */}
