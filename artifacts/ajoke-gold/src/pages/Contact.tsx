@@ -10,7 +10,7 @@ export default function Contact() {
   const [method, setMethod] = useState<'email' | 'whatsapp' | null>(null);
 
   const VENDOR_EMAIL = 'ajbeautystore756@gmail.com';
-  const VENDOR_WHATSAPP = '2347066240431';
+  const VENDOR_WHATSAPP = '971586133185';
 
   const validate = () => {
     if (!name.trim() || !email.trim() || !message.trim()) {
