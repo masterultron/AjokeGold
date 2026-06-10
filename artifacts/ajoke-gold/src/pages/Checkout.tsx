@@ -158,12 +158,26 @@ export const Checkout = () => {
     setIsProcessing(true);
 
     if (method === 'paypal') {
-      const usdAmount = subtotalInUSD.toFixed(2);
-      window.location.href = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=ajbeautystore756@gmail.com&amount=${usdAmount}&currency_code=USD&item_name=Ajoke+Gold+Boutique+Order&no_shipping=1&return=https://ajoke-gold-international.netlify.app/success&cancel_return=https://ajoke-gold-international.netlify.app/checkout`;
-    } else {
-      handlePaystackPayment();
-    }
-  };
+  sessionStorage.setItem('pendingOrder', JSON.stringify({
+    buyerName,
+    buyerEmail,
+    buyerPhone,
+    fulfillment,
+    pickupAddress: fulfillment === 'pickup' ? PICKUP_ADDRESS : null,
+    currency,
+    items: cart.map((item) => ({
+      name: item.product.name,
+      quantity: item.quantity,
+      price: formatPrice(item.product.basePrice),
+    })),
+  }));
+
+  const usdAmount = subtotalInUSD.toFixed(2);
+  window.location.href = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=ajbeautystore756@gmail.com&amount=${usdAmount}&currency_code=USD&item_name=Ajoke+Gold+Boutique+Order&no_shipping=1&return=https://ajoke-gold-international.netlify.app/success&cancel_return=https://ajoke-gold-international.netlify.app/checkout`;
+} else {
+  handlePaystackPayment();
+}
+  }
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] pt-24 pb-12 px-4 flex items-center justify-center font-sans">
