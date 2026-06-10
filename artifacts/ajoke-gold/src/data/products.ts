@@ -229,16 +229,205 @@ export const products: Product[] = [
   { id: "p209", name: "Luxe Twist Barrel Hoops", weight: "6.8g", description: "Bold hoops featuring a clean modern twist rope motif.", category: "Earrings & Pendants", image: "/images/Earrings/140.JPG", basePrice: 3449.64 },
   { id: "p210", name: "The Continental Heritage Pendant", weight: "6.3g", description: "Highly detailed textured gold map of Africa pendant.", category: "Earrings & Pendants", image: "/images/Earrings/141.JPG", basePrice: 3196.00 },
 
-  // --- BRACELETS (p211 - p215) ---
-  { 
-    id: "p211", 
-    name: "The Gilded Ribbon Bangle", 
-    weight: "16.6g", 
-    description: "A substantial 18k gold bangle featuring a bold, ribbed texture that mimics the fluid elegance of folded silk.", 
-    category: "Bracelets", 
-    image: "/images/Bracelets/1.jpeg", 
-    basePrice: 8421.18 
-  },  
+  // --- BRACELETS (p211 - p232) ---
+{ 
+  id: "p211", 
+  name: "The Gilded Ribbon Bangle", 
+  weight: "16.6g", 
+  description: "A substantial 18k gold bangle featuring a bold, ribbed texture that mimics the fluid elegance of folded silk.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/1.jpeg", 
+  basePrice: 8421.18 
+},
+// { 
+//   id: "p232", 
+//   name: "Sovereign Curb Bracelet", 
+//   weight: "8.2g", 
+//   description: "A bold interlocking curb link bracelet in high-polish 18k gold, exuding strength and luxury.", 
+//   category: "Bracelets", 
+//   image: "/images/Bracelets/2.jpeg", 
+//   basePrice: 4160.66 
+// },
+{ 
+  id: "p233", 
+  name: "Diamond-Cut Rope Bracelet", 
+  weight: "6.8g", 
+  description: "A classic twisted rope bracelet with diamond-cut facets that shimmer brilliantly in 18k gold.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/3.jpeg", 
+  basePrice: 3449.64 
+},
+{ 
+  id: "p234", 
+  name: "Polished Bangle Duo", 
+  weight: "12.4g", 
+  description: "A matching pair of sleek high-polish 18k gold bangles — understated elegance at its finest.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/4.jpeg", 
+  basePrice: 6292.68 
+},
+{ 
+  id: "p235", 
+  name: "Figaro Link Bracelet", 
+  weight: "7.5g", 
+  description: "Classic Figaro chain bracelet alternating long and short links in gleaming 18k yellow gold.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/5.jpeg", 
+  basePrice: 3805.13 
+},
+{ 
+  id: "p236", 
+  name: "Honeycomb Bangle", 
+  weight: "9.1g", 
+  description: "A wide bangle adorned with an intricate honeycomb pattern that catches the light from every angle.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/6.jpeg", 
+  basePrice: 4616.43 
+},
+{ 
+  id: "p237", 
+  name: "Beaded Gold Bracelet", 
+  weight: "5.4g", 
+  description: "A delicate strand of uniform high-polish 18k gold beads that sits gracefully on the wrist.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/7.jpeg", 
+  basePrice: 2739.42 
+},
+{ 
+  id: "p238", 
+  name: "Twisted Rope Bangle", 
+  weight: "11.2g", 
+  description: "A solid twisted rope bangle in 18k gold — timeless, sturdy, and effortlessly elegant.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/8.jpeg", 
+  basePrice: 5682.08 
+},
+{ 
+  id: "p239", 
+  name: "Serpentine Flex Bracelet", 
+  weight: "8.8g", 
+  description: "A fluid serpentine-link bracelet in 18k gold that moves gracefully with every gesture.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/9.jpeg", 
+  basePrice: 4464.84 
+},
+{ 
+  id: "p240", 
+  name: "Wide Ribbed Cuff", 
+  weight: "18.3g", 
+  description: "A commanding wide cuff bracelet with deep parallel ribs in polished 18k yellow gold.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/10.jpeg", 
+  basePrice: 9284.67 
+},
+{ 
+  id: "p241", 
+  name: "Sovereign Anchor Chain Bracelet", 
+  weight: "7.9g", 
+  description: "A nautical anchor-link chain bracelet in solid 18k gold — bold, strong, and sophisticated.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/11.jpeg", 
+  basePrice: 4008.51 
+},
+{ 
+  id: "p242", 
+  name: "Hammered Disc Bracelet", 
+  weight: "10.6g", 
+  description: "A statement bracelet featuring hand-hammered circular discs linked in radiant 18k gold.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/12.jpeg", 
+  basePrice: 5377.59 
+},
+{ 
+  id: "p243", 
+  name: "Paperclip Link Bracelet", 
+  weight: "6.2g", 
+  description: "Modern elongated paperclip links in gleaming 18k gold — minimalist yet unmistakably luxurious.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/13.jpeg", 
+  basePrice: 3145.14 
+},
+{ 
+  id: "p244", 
+  name: "Regal Tennis Bracelet", 
+  weight: "9.4g", 
+  description: "A row of perfectly spaced polished gold settings in an elegant 18k gold tennis bracelet silhouette.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/14.jpeg", 
+  basePrice: 4768.02 
+},
+{ 
+  id: "p245", 
+  name: "Chunky Oval Link Bracelet", 
+  weight: "14.7g", 
+  description: "Bold oversized oval links in high-polish 18k yellow gold — a powerful statement piece.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/15.jpeg", 
+  basePrice: 7457.31 
+},
+{ 
+  id: "p246", 
+  name: "Diamond-Cut Bangle", 
+  weight: "8.6g", 
+  description: "A sleek round bangle with alternating high-polish and diamond-cut sections in 18k gold.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/16.jpeg", 
+  basePrice: 4362.78 
+},
+{ 
+  id: "p247", 
+  name: "Floral Charm Bracelet", 
+  weight: "5.8g", 
+  description: "A delicate 18k gold bracelet adorned with miniature blooming flower charms along the chain.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/17.jpeg", 
+  basePrice: 2942.81 
+},
+{ 
+  id: "p248", 
+  name: "Box Chain Bracelet", 
+  weight: "4.9g", 
+  description: "A refined square box-link chain bracelet in 18k gold — clean lines, polished perfection.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/18.jpeg", 
+  basePrice: 2486.55 
+},
+{ 
+  id: "p249", 
+  name: "Sovereign Mesh Bracelet", 
+  weight: "13.1g", 
+  description: "A luxurious wide mesh bracelet in 18k gold with a flexible weave that drapes the wrist beautifully.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/19.jpeg", 
+  basePrice: 6646.43 
+},
+{ 
+  id: "p250", 
+  name: "Herringbone Flat Bracelet", 
+  weight: "7.3g", 
+  description: "A sleek flat herringbone bracelet in 18k gold with a fluid, ribbon-like movement.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/20.jpeg", 
+  basePrice: 3703.07 
+},
+{ 
+  id: "p251", 
+  name: "Granulated Bead Bracelet", 
+  weight: "6.6g", 
+  description: "A strand of textured granulated 18k gold beads — artisanal craftsmanship on the wrist.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/21.jpeg", 
+  basePrice: 3348.57 
+},
+{ 
+  id: "p252", 
+  name: "Imperial Cuff Bracelet", 
+  weight: "20.1g", 
+  description: "A commanding open cuff in heavy 18k gold with a smooth mirror finish — the ultimate wrist statement.", 
+  category: "Bracelets", 
+  image: "/images/Bracelets/22.jpeg", 
+  basePrice: 10197.57 
+}, 
 
   /// --- SETS (p216 - p230) ---
   { 

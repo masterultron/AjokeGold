@@ -91,7 +91,7 @@ export const Checkout = () => {
         callback: function (response: any) {
           console.log('response', response);
           if (response.status === 'success') {
-            fetch('/api/paystack-notify', {
+            fetch('/.netlify/functions/paystack-notify', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
