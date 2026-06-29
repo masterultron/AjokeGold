@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Plus, Minus, ArrowRight, CheckCircle2 } from 'lucide-react';
-import { useCart } from '@/context/CartContext';
+// import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
 import { useLocation } from 'wouter';
+import { useCart, gramsToAED } from '@/context/CartContext';
 
 export const CartDrawer: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
   const { cart, removeFromCart, incrementQuantity, decrementQuantity, subtotal, formatPrice } = useCart();
@@ -47,7 +48,8 @@ export const CartDrawer: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
                       <img src={item.product.image} alt={item.product.name} className="w-20 h-24 object-cover border border-white/10" />
                       <div className="flex-1">
                         <h3 className="text-white font-medium">{item.product.name}</h3>
-                        <p className="text-primary text-sm mt-1">{formatPrice(item.product.basePrice)}</p>
+                        
+<p className="text-primary text-sm mt-1">{formatPrice(gramsToAED(item.product.weightInGrams))}</p>
                         <div className="flex items-center gap-4 mt-3">
                           <div className="flex items-center border border-white/20">
                             <button onClick={() => decrementQuantity(item.product.id)} className="p-1 text-white/60 hover:text-white">

@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'wouter';
-import { products } from '@/data/products';
+import { products, gramsToAED } from '@/data/products';
 import { useCart } from '@/context/CartContext';
 import { ArrowRight } from 'lucide-react';
 
@@ -99,7 +99,7 @@ export default function Home() {
                 <div className="text-center">
                   <p className="text-white/50 text-xs uppercase tracking-widest mb-2">{product.category}</p>
                   <h3 className="text-xl font-serif text-white mb-2">{product.name}</h3>
-                  <p className="text-primary tracking-wider">{formatPrice(product.basePrice)}</p>
+                 <p className="text-primary tracking-wider">{formatPrice(gramsToAED(product.weightInGrams))}</p>
                 </div>
               </motion.div>
             ))}

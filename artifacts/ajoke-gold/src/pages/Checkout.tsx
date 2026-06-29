@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
+import { products, gramsToAED } from '@/data/products';
 import { useLocation } from 'wouter';
 import { Loader2, CreditCard, ShieldCheck, AlertTriangle, Truck, Store, Mail, MapPin } from 'lucide-react';
 
@@ -105,7 +106,7 @@ export const Checkout = () => {
                 items: cart.map((item) => ({
                   name: item.product.name,
                   quantity: item.quantity,
-                  price: formatPrice(item.product.basePrice),
+                  price: formatPrice(gramsToAED(item.product.weightInGrams)),
                 })),
               }),
             })
@@ -168,7 +169,7 @@ export const Checkout = () => {
     items: cart.map((item) => ({
       name: item.product.name,
       quantity: item.quantity,
-      price: formatPrice(item.product.basePrice),
+      price: formatPrice(gramsToAED(item.product.weightInGrams)),
     })),
   }));
 

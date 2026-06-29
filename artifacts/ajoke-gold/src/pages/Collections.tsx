@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { products } from '@/data/products';
+import { products, gramsToAED } from '@/data/products';
 import { useCart } from '@/context/CartContext';
 import { Plus } from 'lucide-react';
 
@@ -57,12 +57,23 @@ export default function Collections() {
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 
-                {/* Overlay actions */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                {/* Hover overlay — desktop only */}
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-center justify-center hidden md:flex">
                   <button 
                     onClick={() => addToCart(product)}
                     className="bg-primary text-black px-6 py-3 uppercase tracking-widest text-xs flex items-center gap-2 hover:bg-white hover:text-black transition-colors"
                     data-testid={`btn-add-cart-${product.id}`}
+                  >
+                    <Plus className="w-4 h-4" /> Add to Cart
+                  </button>
+                </div>
+
+                {/* Always visible on mobile — bottom of image */}
+                <div className="absolute bottom-0 left-0 right-0 md:hidden">
+                  <button 
+                    onClick={() => addToCart(product)}
+                    className="w-full bg-primary text-black py-3 uppercase tracking-widest text-xs flex items-center justify-center gap-2 active:bg-white active:text-black transition-colors"
+                    data-testid={`btn-add-cart-mobile-${product.id}`}
                   >
                     <Plus className="w-4 h-4" /> Add to Cart
                   </button>
@@ -72,7 +83,7 @@ export default function Collections() {
               <div className="text-center px-4">
                 <p className="text-white/40 text-xs uppercase tracking-widest mb-2">{product.category}</p>
                 <h3 className="font-serif text-lg text-white mb-2 leading-tight">{product.name}</h3>
-                <p className="text-primary tracking-wider">{formatPrice(product.basePrice)}</p>
+                <p className="text-primary tracking-wider">{formatPrice(gramsToAED(product.weightInGrams))}</p>
               </div>
             </motion.div>
           ))}
