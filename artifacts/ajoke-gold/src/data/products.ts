@@ -350,6 +350,23 @@ export const products: Product[] = [
   { id: "p413", name: "Hammered Square Stud Earrings",      weightInGrams: 4.24,  description: "Geometric square studs finished with an artisanal hammered texture.", category: "Earrings & Pendants", image: "/images/Earrings/247.jpeg" },
   { id: "p414", name: "Pinwheel Earring & Pendant Set",     weightInGrams: 6.42,  description: "A coordinated set of pinwheel-shaped studs and matching pendant in polished gold.", category: "Earrings & Pendants", image: "/images/Earrings/248.jpeg" },
 
+  // --- NEW EARRINGS & PENDANTS (p415–p429) ---
+  { id: "p415", name: "Faceted Diamond Drop Earrings",       weightInGrams: 9.0,  description: "Bold architectural drop earrings with a faceted diamond-shaped silhouette.", category: "Earrings & Pendants", image: "/images/Earrings/249.jpeg" },
+  { id: "p416", name: "Brushed Faceted Diamond Drop Earrings", weightInGrams: 9.10, description: "Sculptural drop earrings in a brushed-satin faceted diamond form.", category: "Earrings & Pendants", image: "/images/Earrings/250.jpeg" },
+  { id: "p417", name: "Sunflower Bangle & Ring Set",         weightInGrams: 10.20, description: "A radiant open bangle and matching ring featuring sculpted sunflower motifs.", category: "Earrings & Pendants", image: "/images/Earrings/251.jpeg" },
+  { id: "p418", name: "Sculpted Teardrop Cuff & Ring Set",   weightInGrams: 12.0,  description: "A fluid open cuff bangle and matching ring in a sculpted teardrop silhouette.", category: "Earrings & Pendants", image: "/images/Earrings/252.jpeg" },
+  { id: "p419", name: "Brushed Teardrop Hoop Earrings",      weightInGrams: 10.50, description: "Bold teardrop hoops finished in a warm brushed-satin gold texture.", category: "Earrings & Pendants", image: "/images/Earrings/253.jpeg" },
+  { id: "p420", name: "Polished Teardrop Hoop Earrings",     weightInGrams: 10.0,  description: "Sculptural teardrop hoops in a smooth high-polish mirror finish.", category: "Earrings & Pendants", image: "/images/Earrings/254.jpeg" },
+  { id: "p421", name: "Brushed Abstract Diamond Drop Earrings", weightInGrams: 12.90, description: "Statement open drop earrings with an abstract brushed diamond silhouette.", category: "Earrings & Pendants", image: "/images/Earrings/256.jpeg" },
+  { id: "p422", name: "Euro Sign Pendant",                   weightInGrams: 6.25,  description: "A bold Euro currency symbol pendant with a dynamic ribbed texture.", category: "Earrings & Pendants", image: "/images/Earrings/257.jpeg" },
+  { id: "p423", name: "Lion Head Pendant",                   weightInGrams: 6.40,  description: "A finely detailed gold pendant depicting a majestic lion's head.", category: "Earrings & Pendants", image: "/images/Earrings/258.jpeg" },
+  { id: "p424", name: "Pharaoh Mask Pendant",                weightInGrams: 8.0,   description: "A striking solid gold pendant depicting an Egyptian Pharaoh mask.", category: "Earrings & Pendants", image: "/images/Earrings/259.jpeg" },
+  { id: "p425", name: "Elongated Teardrop Drop Earrings",    weightInGrams: 5.90,  description: "Sleek elongated teardrop drops on delicate gold ear wires.", category: "Earrings & Pendants", image: "/images/Earrings/260.jpeg" },
+  { id: "p426", name: "Roped Anchor Pendant",                weightInGrams: 5.45,  description: "A classic nautical anchor pendant with polished rope detailing.", category: "Earrings & Pendants", image: "/images/Earrings/261.jpeg" },
+  { id: "p427", name: "Dollar Sign Pendant",                 weightInGrams: 3.80,  description: "A bold dollar sign pendant with a dynamic diagonal ribbed texture.", category: "Earrings & Pendants", image: "/images/Earrings/262.jpeg" },
+  { id: "p428", name: "Sleek Cat Pendant",                   weightInGrams: 6.10,  description: "An elegant sculpted pendant capturing a cat's graceful arched silhouette.", category: "Earrings & Pendants", image: "/images/Earrings/263.jpeg" },
+  { id: "p429", name: "Prowling Lion Pendant",                weightInGrams: 8.80,  description: "A dynamic solid gold pendant depicting a prowling lion in profile.", category: "Earrings & Pendants", image: "/images/Earrings/264.jpeg" },
+
   // --- BRACELETS ---
   { id: "p211", name: "The Gilded Ribbon Bangle",        weightInGrams: 16.6, description: "A substantial 18k gold bangle featuring a bold, ribbed texture that mimics the fluid elegance of folded silk.", category: "Bracelets", image: "/images/Bracelets/1.jpeg" },
   { id: "p233", name: "Diamond-Cut Rope Bracelet",       weightInGrams: 6.8,  description: "A classic twisted rope bracelet with diamond-cut facets that shimmer brilliantly in 18k gold.", category: "Bracelets", image: "/images/Bracelets/3.jpeg" },
