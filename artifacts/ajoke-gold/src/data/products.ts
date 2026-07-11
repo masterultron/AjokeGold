@@ -389,6 +389,7 @@ export const products: Product[] = [
   { id: "p250", name: "Herringbone Flat Bracelet",       weightInGrams: 7.3,  description: "A sleek flat herringbone bracelet in 18k gold with a fluid, ribbon-like movement.", category: "Bracelets", image: "/images/Bracelets/20.jpeg" },
   { id: "p251", name: "Granulated Bead Bracelet",        weightInGrams: 6.6,  description: "A strand of textured granulated 18k gold beads — artisanal craftsmanship on the wrist.", category: "Bracelets", image: "/images/Bracelets/21.jpeg" },
   { id: "p252", name: "Imperial Cuff Bracelet",          weightInGrams: 20.1, description: "A commanding open cuff in heavy 18k gold with a smooth mirror finish — the ultimate wrist statement.", category: "Bracelets", image: "/images/Bracelets/22.jpeg" },
+  { id: "p443", name: "Sunflower Bangle & Ring Set", weightInGrams: 10.20, description: "A radiant open bangle and matching ring featuring sculpted sunflower motifs.", category: "Bracelets", image: "/images/Bracelets/23.jpeg" },
 
   // --- SETS (original p216–p230) ---
   { id: "p216", name: "Imperial Rosette Gala Set",     weightInGrams: 47.9, description: "A breathtaking collection featuring a matching cocktail ring and earrings with tiered gold petals and ruby-toned centers.", category: "Sets", image: "/images/Sets/1.jpeg" },
