@@ -94,6 +94,20 @@ export const products: Product[] = [
   { id: "p68",  name: "Polished Statement Curb",       weightInGrams: 7.60, description: "Heavy-duty chain with mirror-like luster.",                                    category: "Necklaces", image: "/images/Necklace/65.JPG" },
   { id: "p69",  name: "The Sovereign Bold Curb",       weightInGrams: 10.40, description: "Ultimate investment piece; heavy solid gold chain.",                          category: "Necklaces", image: "/images/Necklace/66.JPG" },
 
+  // --- NEW NECKLACES (p444–p456) ---
+  { id: "p444", name: "Polished Box Chain Necklace",        weightInGrams: 1.35,  description: "A sleek high-polish box chain necklace with a fine, uniform link profile.", category: "Necklaces", image: "/images/Necklace/67.JPG" },
+  // { id: "p445", name: "Cuban Curb Link Chain",              weightInGrams: 10.25, description: "A substantial 24-inch Cuban curb link chain with a bold, interlocking profile.", category: "Necklaces", image: "/images/Necklace/68.JPG" },
+  { id: "p446", name: "Paperclip Link Chain",               weightInGrams: 4.10,  description: "A modern elongated paperclip link chain in polished 18k gold.", category: "Necklaces", image: "/images/Necklace/69.JPG" },
+  // { id: "p447", name: "Classic Rope Chain",                 weightInGrams: 12.70, description: "A timeless twisted rope chain with diamond-cut facets for brilliant shimmer.", category: "Necklaces", image: "/images/Necklace/70.JPG" },
+  // { id: "p448", name: "Figaro Link Chain",                  weightInGrams: 4.0,   description: "A classic Figaro chain alternating long and short polished links.", category: "Necklaces", image: "/images/Necklace/71.JPG" },
+  { id: "p450", name: "Wheat Link Chain",                   weightInGrams: 2.29,  description: "A finely woven wheat-link chain with a rich, textured braid pattern.", category: "Necklaces", image: "/images/Necklace/72.JPG" },
+  { id: "p451", name: "Slim Snake Chain",                   weightInGrams: 2.48,  description: "A sleek, flexible snake chain with a smooth continuous surface.", category: "Necklaces", image: "/images/Necklace/73.JPG" },
+  { id: "p452", name: "Herringbone Chain",                  weightInGrams: 6.16,  description: "A flat, flexible herringbone chain with a sleek reflective weave.", category: "Necklaces", image: "/images/Necklace/74.JPG" },
+  // { id: "p453", name: "Franco Link Chain",                  weightInGrams: 3.17,  description: "A durable Franco link chain featuring a tightly woven diagonal pattern.", category: "Necklaces", image: "/images/Necklace/75.JPG" },
+  { id: "p454", name: "Reversible Two-Face Mesh Omega Necklace", weightInGrams: 6.40, description: "A versatile two-tone reversible mesh omega necklace, wearable on either side.", category: "Necklaces", image: "/images/Necklace/76.JPG" },
+  { id: "p455", name: "Textured Mesh Omega Necklace",       weightInGrams: 3.75,  description: "A sleek mesh omega necklace with a finely textured woven surface.", category: "Necklaces", image: "/images/Necklace/77.JPG" },
+  { id: "p456", name: "Wide Textured Mesh Omega Necklace",  weightInGrams: 13.28, description: "A substantial wide mesh omega necklace with a rich textured finish.", category: "Necklaces", image: "/images/Necklace/78.JPG" },
+
   // --- EARRINGS & PENDANTS ---
   { id: "p70",  name: "Golden Bead Halo Hoops",           weightInGrams: 6.0,  description: "Classic gold hoops featuring a distinctive continuous bead texture.",                category: "Earrings & Pendants", image: "/images/Earrings/1.jpeg" },
   { id: "p71",  name: "The Global Currency Pendant",      weightInGrams: 2.6,  description: "A high-polish solid gold Euro symbol pendant.",                                      category: "Earrings & Pendants", image: "/images/Earrings/2.jpeg" },
@@ -462,4 +476,19 @@ export const products: Product[] = [
   { id: "p347", name: "Two-Tone Monstera Leaf Set",          weightInGrams: 20.8, description: "A bold two-tone set with sculpted monstera leaf motifs in gold and silver on a triple-strand chain and matching earrings.", category: "Sets", image: "/images/Sets/67.jpeg" },
   { id: "p348", name: "Satin Freeform Bib Set",              weightInGrams: 32.8, description: "A statement set featuring large satin freeform organic shapes on a triple-strand bib necklace with tiered drop earrings.", category: "Sets", image: "/images/Sets/68.jpeg" },
   { id: "p349", name: "Two-Tone Freeform Bib Set",           weightInGrams: 32.8, description: "A luxurious two-tone set with organic freeform shapes in gold and white gold tones on a bib necklace and drop earrings.", category: "Sets", image: "/images/Sets/69.jpeg" },
+
+  // --- NEW SETS (p430–p442) ---
+  { id: "p430", name: "Sunburst Floral Disc Set",       weightInGrams: 56.10, description: "A radiant statement set featuring textured sunburst floral discs across a matching necklace, earrings, ring, and bangle.", category: "Sets", image: "/images/Sets/70.jpeg" },
+  { id: "p431", name: "Brushed Diamond Bead Necklace Set", weightInGrams: 38.50, description: "A bold set featuring graduated brushed-satin diamond-shaped gold beads with matching drop earrings.", category: "Sets", image: "/images/Sets/71.jpeg" },
+  { id: "p432", name: "Teardrop Swirl Set",             weightInGrams: 53.70, description: "A dramatic set featuring open teardrop swirl links across a necklace, hoop earrings, ring, and bangle.", category: "Sets", image: "/images/Sets/72.jpeg" },
+  { id: "p433", name: "Calla Lily Leaf Pendant Set",    weightInGrams: 10.41, description: "A delicate set featuring sculpted calla lily leaf motifs on a fine wire necklace with matching drop earrings and ring.", category: "Sets", image: "/images/Sets/73.jpeg" },
+  { id: "p434", name: "Brushed Cube Cluster Set",       weightInGrams: 14.19, description: "A modern set featuring clustered brushed-gold cube forms on a fine wire necklace with matching earrings and ring.", category: "Sets", image: "/images/Sets/74.jpeg" },
+  { id: "p435", name: "Sculpted Fringe Bar Necklace",   weightInGrams: 17.49, description: "A sleek necklace featuring alternating polished and brushed vertical bar fringe with a matching ring.", category: "Sets", image: "/images/Sets/75.jpeg" },
+  { id: "p436", name: "Mixed Disc Cluster Necklace",    weightInGrams: 16.94, description: "A striking necklace featuring a cluster of mixed-finish discs, including a tortoise-effect accent, with matching earrings.", category: "Sets", image: "/images/Sets/76.jpeg" },
+  { id: "p437", name: "Woven Mesh Collar Necklace",     weightInGrams: 13.28, description: "An elegant woven mesh collar necklace with a smooth, flexible finish.", category: "Sets", image: "/images/Sets/77.jpeg" },
+  { id: "p438", name: "Hammered Pebble Cluster Set",    weightInGrams: 13.12, description: "A textured set featuring clustered hammered pebble forms on a fine wire necklace with matching earrings.", category: "Sets", image: "/images/Sets/78.jpeg" },
+  { id: "p439", name: "Braided Mesh Tassel Set",        weightInGrams: 18.20, description: "A luxurious set featuring a wide braided mesh collar necklace with matching mesh tassel drop earrings and ring.", category: "Sets", image: "/images/Sets/79.jpeg" },
+  { id: "p440", name: "Dagger Fringe Necklace",         weightInGrams: 22.11, description: "A bold necklace featuring alternating polished and brushed dagger-shaped fringe pendants with a matching ring.", category: "Sets", image: "/images/Sets/81.jpeg" },
+  { id: "p441", name: "Wave Ribbon Necklace Set",       weightInGrams: 11.46, description: "A fluid necklace featuring sculpted wave ribbon forms on a fine chain with matching drop earrings and ring.", category: "Sets", image: "/images/Sets/84.jpeg" },
+  { id: "p442", name: "Oval Pebble Fan Necklace",       weightInGrams: 15.07, description: "An elegant necklace featuring a fan of mixed-finish oval pebble forms with matching stud earrings and ring.", category: "Sets", image: "/images/Sets/86.jpeg" },
 ];
