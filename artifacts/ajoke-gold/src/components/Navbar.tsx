@@ -24,13 +24,17 @@ export const Navbar: React.FC = () => {
           </Link>
         </div>
 
-        <div className="absolute left-1/2 -translate-x-1/2">
-          <Link href="/" className="text-primary font-serif text-2xl tracking-[0.2em] hover:opacity-80 transition-opacity" data-testid="link-home">
+        <div className="absolute left-1/2 -translate-x-1/2 pointer-events-none">
+          <Link
+            href="/"
+            className="pointer-events-auto text-primary font-serif text-sm md:text-2xl tracking-[0.1em] md:tracking-[0.2em] hover:opacity-80 transition-opacity"
+            data-testid="link-home"
+          >
             AJOKE GOLD INTERNATIONAL
           </Link>
         </div>
 
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-6 relative z-10">
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-1 text-white/80 hover:text-primary text-sm uppercase tracking-wider outline-none" data-testid="btn-currency">
               {currency} <ChevronDown className="w-4 h-4" />
@@ -44,8 +48,8 @@ export const Navbar: React.FC = () => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <button 
-            onClick={() => setIsCartOpen(true)} 
+          <button
+            onClick={() => setIsCartOpen(true)}
             className="relative text-white/80 hover:text-primary transition-colors"
             data-testid="btn-cart"
           >
