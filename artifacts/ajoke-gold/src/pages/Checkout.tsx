@@ -20,7 +20,6 @@ const formatPickupAddress = () =>
 export const Checkout = () => {
   const {
     subtotal,
-    subtotalInNGN,
     subtotalInUSD,
     formatPrice,
     cart,
@@ -28,7 +27,7 @@ export const Checkout = () => {
   } = useCart();
   const [, setLocation] = useLocation();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [method, setMethod] = useState<'card' | 'paypal' | 'paystack'>('card');
+  const [method, setMethod] = useState<'card' | 'paypal'>('card');
 
   // --- FULFILLMENT (Pickup vs Delivery) ---
   const [fulfillment, setFulfillment] = useState<'pickup' | 'delivery'>('pickup');
@@ -38,65 +37,70 @@ export const Checkout = () => {
   const [buyerEmail, setBuyerEmail] = useState('');
   const [buyerPhone, setBuyerPhone] = useState('');
 
-  // Card and Paystack only support NGN in this setup
-  const requiresNaira = method === 'card' || method === 'paystack';
-  const currencyMismatch = requiresNaira && currency !== 'NGN';
+  // Flutterwave supports NGN, USD, and AED directly — no currency restriction needed anymore
+  const currencyMismatch = false;
 
-  // --- LOAD PAYSTACK SCRIPT ON MOUNT ---
+  // --- LOAD FLUTTERWAVE SCRIPT ON MOUNT ---
   useEffect(() => {
     // @ts-ignore
-    if (window.PaystackPop) return;
-    if (document.querySelector('script[src*="js.paystack.co"]')) return;
+    if (window.FlutterwaveCheckout) return;
+    if (document.querySelector('script[src*="checkout.flutterwave.com"]')) return;
 
     const script = document.createElement('script');
-    script.src = 'https://js.paystack.co/v1/inline.js';
+    script.src = 'https://checkout.flutterwave.com/v3.js';
     script.async = true;
     document.head.appendChild(script);
   }, []);
 
-  // --- PAYSTACK HANDLER ---
-  const handlePaystackPayment = () => {
+  // --- FLUTTERWAVE HANDLER ---
+  const handleFlutterwavePayment = () => {
     // @ts-ignore
-    if (!window.PaystackPop) {
-      alert('Paystack is still loading. Please try again in a moment.');
+    if (!window.FlutterwaveCheckout) {
+      alert('Payment is still loading. Please try again in a moment.');
       setIsProcessing(false);
       return;
     }
 
-    const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
+    const publicKey = import.meta.env.VITE_FLUTTERWAVE_PUBLIC_KEY;
     if (!publicKey) {
-      alert('Paystack public key is missing. Please contact support.');
+      alert('Flutterwave public key is missing. Please contact support.');
       setIsProcessing(false);
       return;
     }
+
+    const txRef = `AJOKE-${Date.now()}`;
 
     try {
       // @ts-ignore
-      const handler = window.PaystackPop.setup({
-        key: publicKey,
-        email: buyerEmail,
-        amount: Math.round(subtotalInNGN * 100),
-        currency: 'NGN',
-        metadata: {
-          custom_fields: [
-            { display_name: 'Payment Source', variable_name: 'payment_source', value: 'Ajoke Gold Web' },
-            { display_name: 'Customer Name', variable_name: 'buyer_name', value: buyerName },
-            { display_name: 'Customer Phone', variable_name: 'buyer_phone', value: buyerPhone },
-            { display_name: 'Fulfillment', variable_name: 'fulfillment', value: fulfillment },
-            ...(fulfillment === 'pickup'
-              ? [{ display_name: 'Pickup Address', variable_name: 'pickup_address', value: formatPickupAddress().replace(/\n/g, ', ') }]
-              : []),
-            { display_name: 'Items Ordered', variable_name: 'items_ordered', value: cart.map((item) => `${item.product.name} x${item.quantity}`).join(', ') },
-          ],
+      window.FlutterwaveCheckout({
+        public_key: publicKey,
+        tx_ref: txRef,
+        amount: subtotal,
+        currency: currency, // 'AED' | 'USD' | 'NGN' — Flutterwave supports all three directly
+        payment_options: 'card, mobilemoneyghana, ussd',
+        customer: {
+          email: buyerEmail,
+          phone_number: buyerPhone,
+          name: buyerName,
+        },
+        meta: {
+          payment_source: 'Ajoke Gold Web',
+          fulfillment,
+          pickup_address: fulfillment === 'pickup' ? formatPickupAddress().replace(/\n/g, ', ') : '',
+          items_ordered: cart.map((item) => `${item.product.name} x${item.quantity}`).join(', '),
+        },
+        customizations: {
+          title: 'Ajoke Gold International',
+          description: 'Payment for jewelry order',
         },
         callback: function (response: any) {
           console.log('response', response);
-          if (response.status === 'success') {
-            fetch('/.netlify/functions/paystack-notify', {
+          if (response.status === 'successful' || response.status === 'completed') {
+            fetch('/.netlify/functions/flutterwave-notify', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                reference: response.reference,
+                reference: response.transaction_id || txRef,
                 buyerName,
                 buyerEmail,
                 buyerPhone,
@@ -124,15 +128,13 @@ export const Checkout = () => {
             setIsProcessing(false);
           }
         },
-        onClose: function () {
+        onclose: function () {
           setIsProcessing(false);
         },
       });
-
-      handler.openIframe();
     } catch (err) {
-      console.error('Paystack setup error:', err);
-      alert('Paystack failed to open. Please try again.');
+      console.error('Flutterwave setup error:', err);
+      alert('Payment window failed to open. Please try again.');
       setIsProcessing(false);
     }
   };
@@ -140,11 +142,9 @@ export const Checkout = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Block card/paystack if cart isn't in NGN
-    if (currencyMismatch) {
-      alert(
-        `Card and Paystack only support payments in Naira (NGN). Your cart is currently in ${currency}. Please go back and switch your currency to NGN before continuing.`
-      );
+    // Flutterwave account is under construction — block submission and warn user
+    if (method === 'card') {
+      alert('Flutterwave is currently under construction. Please select PayPal instead — it also accepts card payments.');
       return;
     }
 
@@ -159,25 +159,25 @@ export const Checkout = () => {
     setIsProcessing(true);
 
     if (method === 'paypal') {
-  sessionStorage.setItem('pendingOrder', JSON.stringify({
-    buyerName,
-    buyerEmail,
-    buyerPhone,
-    fulfillment,
-    pickupAddress: fulfillment === 'pickup' ? PICKUP_ADDRESS : null,
-    currency,
-    items: cart.map((item) => ({
-      name: item.product.name,
-      quantity: item.quantity,
-      price: formatPrice(gramsToAED(item.product.weightInGrams)),
-    })),
-  }));
+      sessionStorage.setItem('pendingOrder', JSON.stringify({
+        buyerName,
+        buyerEmail,
+        buyerPhone,
+        fulfillment,
+        pickupAddress: fulfillment === 'pickup' ? PICKUP_ADDRESS : null,
+        currency,
+        items: cart.map((item) => ({
+          name: item.product.name,
+          quantity: item.quantity,
+          price: formatPrice(gramsToAED(item.product.weightInGrams)),
+        })),
+      }));
 
-  const usdAmount = subtotalInUSD.toFixed(2);
-  window.location.href = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=ajbeautystore756@gmail.com&amount=${usdAmount}&currency_code=USD&item_name=Ajoke+Gold+Boutique+Order&no_shipping=1&return=https://ajoke-gold-international.netlify.app/success&cancel_return=https://ajoke-gold-international.netlify.app/checkout`;
-} else {
-  handlePaystackPayment();
-}
+      const usdAmount = subtotalInUSD.toFixed(2);
+      window.location.href = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=ajbeautystore756@gmail.com&amount=${usdAmount}&currency_code=USD&item_name=Ajoke+Gold+Boutique+Order&no_shipping=1&return=https://ajoke-gold-international.netlify.app/success&cancel_return=https://ajoke-gold-international.netlify.app/checkout`;
+    } else {
+      handleFlutterwavePayment();
+    }
   }
 
   return (
@@ -301,44 +301,32 @@ export const Checkout = () => {
           </div>
 
           {/* PAYMENT METHOD SELECTION */}
-          <div className="grid grid-cols-3 gap-3">
-            <button type="button" onClick={() => setMethod('card')} className={`flex flex-col items-center p-4 border transition-all ${method === 'card' ? 'border-primary bg-primary/5 shadow-[0_0_15px_rgba(212,175,55,0.1)]' : 'border-white/10 opacity-30 hover:opacity-100'}`}>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                setMethod('card');
+              }}
+              className={`flex flex-col items-center p-4 border transition-all ${method === 'card' ? 'border-primary bg-primary/5 shadow-[0_0_15px_rgba(212,175,55,0.1)]' : 'border-white/10 opacity-30 hover:opacity-100'}`}
+            >
               <CreditCard className={`w-5 h-5 mb-2 ${method === 'card' ? 'text-primary' : 'text-white'}`} />
-              <span className="text-[10px] uppercase tracking-widest text-white font-bold">Credit Card</span>
+              <span className="text-[10px] uppercase tracking-widest text-white font-bold">Flutterwave</span>
             </button>
 
             <button type="button" onClick={() => setMethod('paypal')} className={`flex flex-col items-center p-4 border transition-all ${method === 'paypal' ? 'border-primary bg-primary/5 shadow-[0_0_15px_rgba(212,175,55,0.1)]' : 'border-white/10 opacity-30 hover:opacity-100'}`}>
               <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" className="h-5 mb-2" />
               <span className="text-[10px] uppercase tracking-widest text-white font-bold">PayPal</span>
             </button>
-
-            <button type="button" onClick={() => setMethod('paystack')} className={`flex flex-col items-center p-4 border transition-all ${method === 'paystack' ? 'border-primary bg-primary/5 shadow-[0_0_15px_rgba(212,175,55,0.1)]' : 'border-white/10 opacity-30 hover:opacity-100'}`}>
-              <img src="https://paystack.com/assets/img/login/paystack-logo.png" alt="Paystack" className="h-3 mb-3 brightness-200" />
-              <span className="text-[10px] uppercase tracking-widest text-white font-bold">Paystack</span>
-            </button>
           </div>
 
-          {/* CURRENCY MISMATCH WARNING */}
-          {currencyMismatch && (
-            <div className="border border-red-500/30 bg-red-500/5 p-5 flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
-              <div className="flex-1">
-                <p className="text-red-300 text-sm font-semibold mb-1 uppercase tracking-wider">
-                  Currency Not Supported
-                </p>
-                <p className="text-white/70 text-sm leading-relaxed mb-3">
-                  Card and Paystack only accept payments in <span className="text-primary font-bold">Naira (NGN)</span>.
-                  Your cart is currently in <span className="text-primary font-bold">{currency}</span>.
-                  Please go back and switch your currency to NGN, or use PayPal instead.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setLocation('/cart')}
-                  className="text-[11px] uppercase tracking-[0.2em] text-primary border border-primary/40 px-4 py-2 hover:bg-primary/10 transition-colors"
-                >
-                  ← Back to Cart
-                </button>
-              </div>
+          {/* FLUTTERWAVE UNDER CONSTRUCTION WARNING */}
+          {method === 'card' && (
+            <div className="border border-yellow-500/30 bg-yellow-500/5 p-4 flex items-start gap-3">
+              <AlertTriangle className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
+              <p className="text-white/70 text-xs leading-relaxed">
+                <span className="text-yellow-300 font-bold">Flutterwave is currently under construction.</span>{' '}
+                Please use <span className="text-yellow-300 font-bold">PayPal</span> instead — it also accepts card payments.
+              </p>
             </div>
           )}
 
@@ -346,7 +334,7 @@ export const Checkout = () => {
             <p className="text-white/70 text-sm leading-relaxed">
               You will be redirected to the secure{' '}
               <span className="text-primary font-bold uppercase">
-                {method === 'card' ? 'Paystack' : method}
+                {method === 'card' ? 'Flutterwave' : method}
               </span>{' '}
               portal to finalize your order.
             </p>
@@ -354,13 +342,11 @@ export const Checkout = () => {
 
           <Button
             type="submit"
-            disabled={isProcessing || currencyMismatch}
+            disabled={isProcessing}
             className="w-full bg-primary text-black hover:bg-primary/90 rounded-none h-14 uppercase tracking-[0.2em] font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isProcessing ? (
               <Loader2 className="animate-spin mr-2" />
-            ) : currencyMismatch ? (
-              `Switch to NGN to Continue`
             ) : (
               `Proceed to Payment`
             )}

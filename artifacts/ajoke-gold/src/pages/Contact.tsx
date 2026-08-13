@@ -9,7 +9,7 @@ export default function Contact() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [method, setMethod] = useState<'email' | 'whatsapp' | null>(null);
 
-  const VENDOR_EMAIL = 'ajbeautystore756@gmail.com';
+  const VENDOR_EMAIL = 'afolabiadejoke756@gmail.com';
   const VENDOR_WHATSAPP = '971586133185';
 
   const validate = () => {

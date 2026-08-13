@@ -13,7 +13,7 @@ export const Success = () => {
 
     try {
       const orderData = JSON.parse(raw);
-      fetch('/.netlify/functions/paystack-notify', {
+      fetch('/.netlify/functions/order-notify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

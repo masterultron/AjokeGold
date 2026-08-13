@@ -114,7 +114,7 @@ const RoyalInquiryModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   const { cart } = useCart();
 
   const VENDOR_WHATSAPP = '971586133185';
-  const VENDOR_EMAIL = 'ajbeautystore756@gmail.com';
+  const VENDOR_EMAIL = 'afolabiadejoke756@gmail.com';
 
   const handleNext = () => setStep(2);
   const handleNext3 = () => setStep(3);

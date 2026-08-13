@@ -4,8 +4,8 @@
   functions = "netlify/functions"
 
 [[redirects]]
-  from = "/api/paystack-notify"
-  to = "/.netlify/functions/paystack-notify"
+  from = "/api/order-notify"
+  to = "/.netlify/functions/order-notify"
   status = 200
 
 [[redirects]]

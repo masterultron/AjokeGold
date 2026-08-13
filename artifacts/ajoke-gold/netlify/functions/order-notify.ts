@@ -39,6 +39,7 @@ export const handler: Handler = async (event) => {
       currency,
       fulfillment,        // 'pickup' | 'delivery'
       pickupAddress,      // PickupAddress | null
+      deliveryAddress,    // string | null
     } = JSON.parse(event.body || '{}');
 
     const isPickup = fulfillment === 'pickup';
@@ -73,6 +74,17 @@ export const handler: Handler = async (event) => {
                 : ''
             }
           </div>
+
+          ${
+            !isPickup && deliveryAddress
+              ? `
+          <h3 style="color: #555; margin-top: 24px;">Delivery Address</h3>
+          <div style="background: #fafafa; border-left: 4px solid #b8860b; padding: 16px 20px; margin: 16px 0; line-height: 1.7;">
+            ${deliveryAddress.replace(/\n/g, '<br/>')}
+          </div>
+          `
+              : ''
+          }
 
           <h3 style="color: #555; margin-top: 24px;">Customer Details</h3>
           <table style="width: 100%; border-collapse: collapse;">
@@ -162,6 +174,17 @@ export const handler: Handler = async (event) => {
             The delivery fee is paid separately, after this confirmation.
           </div>
 
+          ${
+            deliveryAddress
+              ? `
+          <h3 style="color: #555; margin-top: 24px;">Delivery Address You Provided</h3>
+          <div style="background: #fafafa; border-left: 4px solid #b8860b; padding: 16px 20px; margin: 16px 0; line-height: 1.7;">
+            ${deliveryAddress.replace(/\n/g, '<br/>')}
+          </div>
+          `
+              : ''
+          }
+
           <h3 style="color: #555; margin-top: 24px;">Items Ordered (${currency})</h3>
           <table style="width: 100%; border-collapse: collapse;">
             <thead>
@@ -212,7 +235,7 @@ export const handler: Handler = async (event) => {
       }),
     };
   } catch (err) {
-    console.error('paystack-notify error:', err);
+    console.error('order-notify error:', err);
     return { statusCode: 500, body: JSON.stringify({ error: 'Server error' }) };
   }
 };
